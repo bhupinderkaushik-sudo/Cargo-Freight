@@ -1,0 +1,674 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px}
+.wrap{padding:16px}
+.prompt-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:20px;margin-bottom:14px;white-space:pre-wrap;font-size:12px;line-height:1.7;color:var(--color-text-primary);font-family:var(--font-mono);max-height:600px;overflow-y:auto}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-primary);font-family:var(--font-sans)}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn-green{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.copied{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.sec{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
+.bg{background:#E6F1FB;color:#0C447C}.gg{background:#EAF3DE;color:#27500A}.gp{background:#EEEDFE;color:#3C3489}.ga{background:#FAEEDA;color:#633806}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+
+<h2 class="sr-only">Master software prompt for Indian freight forwarder SaaS platform serving 50 companies</h2>
+
+<div class="wrap">
+
+<div style="margin-bottom:14px">
+  <div class="sec">Platform type</div>
+  <div class="tag-row">
+    <span class="badge gp">Multi-tenant SaaS</span>
+    <span class="badge bg">React + Node.js + PostgreSQL</span>
+    <span class="badge gg">50 freight forwarders</span>
+    <span class="badge ga">Indian compliance (GST/TDS/ICEGATE)</span>
+  </div>
+</div>
+
+<div class="sec">Full master prompt — copy everything below</div>
+<div class="prompt-box" id="prompt-text">Build a production-ready, multi-tenant SaaS web application called "CargoSphere India" — a complete freight forwarding management platform for Indian air cargo freight forwarders.
+
+════════════════════════════════════════
+PLATFORM OVERVIEW
+════════════════════════════════════════
+
+This platform will serve up to 50 independent freight forwarding companies (tenants) simultaneously. Each freight forwarder is a separate tenant with their own:
+- Data isolation (no tenant can see another's data)
+- Branding (logo, company name on all documents)
+- Users, roles and branches
+- Subscription plan (Basic / Professional / Enterprise)
+
+The platform admin (super admin — you, the software owner) can manage all tenants from a separate admin portal.
+
+════════════════════════════════════════
+TECH STACK
+════════════════════════════════════════
+
+Frontend:
+- React 18 with TypeScript
+- Tailwind CSS for styling
+- React Router v6 for navigation
+- React Query (TanStack) for server state
+- React Hook Form + Zod for forms and validation
+- Recharts for graphs and analytics
+- Vite as build tool
+
+Backend:
+- Node.js with Express.js (REST API)
+- PostgreSQL database (with row-level security for multi-tenancy)
+- Prisma ORM
+- JWT authentication with refresh tokens
+- Redis for session caching and job queues
+- Bull.js for background jobs (reminders, report generation)
+- Nodemailer for email
+- WhatsApp Business API integration (Meta Cloud API)
+- Multer + AWS S3 (or Cloudinary free tier) for file uploads
+
+Infrastructure:
+- Deployable on Render.com free tier (frontend + backend + PostgreSQL)
+- Environment variables for all secrets
+- Docker support optional
+
+════════════════════════════════════════
+DATABASE — MULTI-TENANT DESIGN
+════════════════════════════════════════
+
+Every table must have a tenant_id column with row-level security (RLS) enforced at the database level. Core tables:
+
+tenants, tenant_subscriptions, users, user_roles, permissions, branches,
+airports, airlines, domestic_stations, countries,
+customers (exporters), sub_agencies,
+awb_master, hawb_master, shipments, shipment_tracking,
+flight_bookings, space_requests,
+rate_cards, rate_slabs, airline_commission_rates,
+sales_enquiries, rate_quotations, rate_proposals,
+cha_challans, airline_invoices, customer_invoices,
+credit_notes, debit_notes, payments_made, payments_received,
+ledger_entries, tds_entries, gst_returns,
+documents, notifications, activity_logs,
+reminders, report_schedules
+
+════════════════════════════════════════
+MODULE 1 — SUPER ADMIN PORTAL
+(Platform owner — manages all 50 tenants)
+════════════════════════════════════════
+
+- Dashboard: total tenants, active users, revenue, system health
+- Tenant management: create, suspend, delete tenant accounts
+- Subscription management: assign plans, track payments from tenants
+- Global master data: seed airport codes, airline codes, country codes
+- System-wide announcements and notifications
+- Audit logs across all tenants
+- Usage analytics: which tenants are most active, API usage
+
+════════════════════════════════════════
+MODULE 2 — TENANT ADMIN / COMPANY SETUP
+(Each freight forwarder's own admin)
+════════════════════════════════════════
+
+Company profile:
+- Company name, logo upload, letterhead
+- GSTIN, PAN, IEC code, CHA licence number
+- IATA agent code, DGCA approval number
+- Authorised signatory name and designation
+- All branch office details (multiple branches per tenant)
+- Bank account details for invoices
+
+User management:
+- Create users with roles: Super Admin, Branch Admin,
+  Operations Manager, Sales Executive, AWB Executive,
+  CHA / Customs Officer, Accounts, View Only
+- Each user assigned to one or more branches
+- Permission matrix: granular on/off per module per user
+- Invite by email — user sets own password on first login
+- Force logout, suspend, reset password
+- Full activity log per user (what they did, when, from which IP)
+
+Security:
+- Optional 2FA (OTP on mobile)
+- Auto logout after inactivity
+- IP whitelist option
+- Login history
+
+════════════════════════════════════════
+MODULE 3 — MASTER DATA
+════════════════════════════════════════
+
+Airport master:
+- IATA code (3 letter), ICAO code (4 letter)
+- Full airport name, city, country, country code
+- Customs port code (ICEGATE format e.g. INDEL6)
+- Timezone, AAI region (for Indian airports)
+- Cargo terminal available: yes/no
+- Type: International / Domestic / Domestic+International
+- Bulk import via CSV
+
+Airline master:
+- IATA code (2 letter), ICAO code (3 letter)
+- AWB prefix (3 digit number e.g. 176 for Air India)
+- Full airline name, country, hub airports
+- Cargo division name
+- Cargo booking email and phone
+- Alliance membership
+- Active / inactive status
+- Bulk import via CSV
+
+India domestic stations:
+- All AAI airports with station codes
+- State, AAI region, customs port code
+- International cargo: yes/no
+
+Country master:
+- Country name, ISO code, currency, ISD code
+
+Commodity master:
+- Commodity name, HS code range
+- Special handling requirements (DG, perishable, valuable)
+
+════════════════════════════════════════
+MODULE 4 — SALES MODULE
+(Dealing with exporters and customers)
+════════════════════════════════════════
+
+Customer / exporter management:
+- Company name, address, GSTIN, IEC code, PAN
+- Contact persons (multiple)
+- Credit limit and credit days
+- Assigned sales executive
+- Customer category: Exporter / Importer / Both
+- KYC document upload (GST certificate, IEC, PAN)
+- Customer ledger view
+
+Sales enquiry management:
+- Capture inbound enquiry from customer
+- Origin, destination, commodity, weight, dimensions
+- Required departure date range
+- Special requirements
+- Assign to sales executive
+- Track enquiry status: New / Quoted / Negotiating / Won / Lost
+
+Rate quotation to customer (outgoing):
+- Create formal rate quotation PDF
+- Include: airline, route, rate/kg, fuel surcharge,
+  handling charges, validity period, terms
+- Multiple rate options in one quotation
+- Email / WhatsApp quotation directly from system
+- Customer acceptance / rejection tracking
+- Convert accepted quotation to booking automatically
+
+Rate proposal received from customer (incoming):
+- Customer sends their target rate
+- Sales executive can accept, counter-offer, or reject
+- Full negotiation thread with timestamps
+- Convert to confirmed booking on acceptance
+
+════════════════════════════════════════
+MODULE 5 — AIRLINE RATE MANAGEMENT
+════════════════════════════════════════
+
+AWB stock management:
+- Track AWB booklets issued by each airline
+- Record AWB number ranges (from–to)
+- Mark individual AWBs as used / voided / available
+- Low stock alert when less than 10 AWBs remaining
+- Separate stock per airline per branch
+
+Airline rate types — support all of the following:
+
+1. SPECIFIC SHIPMENT RATE (SSR):
+   Rate offered by airline for one specific shipment only
+   Fields: airline, route, flight, date, commodity,
+   weight, rate/kg, validity (one-time use)
+
+2. WEIGHT SLAB RATES (General tariff):
+   Rate varies by weight break
+   Slabs: minimum charge, normal, +45kg, +100kg,
+   +300kg, +500kg, +1000kg
+   Fields: airline, origin, destination, commodity type,
+   validity from/to
+
+3. SPECIFIC COMMODITY RATES (SCR):
+   Special rates for specific commodities
+   e.g. pharma, perishables, garments, auto parts
+   Fields: commodity, HS code range, rate, conditions
+
+4. COMMISSION-BASED RATES:
+   Airline gives a base rate, forwarder adds margin
+   Fields: airline, route, base rate, forwarder margin,
+   final rate quoted to customer
+
+5. CONTRACT RATES:
+   Long-term rates agreed with airline
+   Fields: contract number, validity period, minimum
+   tonnage commitment, penalty clauses
+
+Rate comparison engine:
+- For any route + weight + commodity, show all
+  available rates from all airlines side by side
+- Highlight cheapest, fastest, most reliable
+
+Best rate auto-suggestion:
+- System suggests best airline + rate for any given enquiry
+- Based on weight, commodity, route, departure date
+
+════════════════════════════════════════
+MODULE 6 — OPERATIONS MODULE
+════════════════════════════════════════
+
+Space request to airline:
+- Request space on specific flight for specific weight
+- Track request status: Requested / Confirmed / Waitlisted / Rejected
+- Confirmation reference number from airline
+- Auto-alert if space not confirmed 24 hours before departure
+
+Master AWB (MAWB) creation and management:
+- Select airline from master
+- AWB number auto-assigned from stock
+- Full shipper details (name, address, GSTIN, IEC)
+- Full consignee details (name, address, country)
+- Origin and destination airport (searchable)
+- Flight number and departure date
+- Pieces, gross weight, volume, chargeable weight
+  (auto-calculated: higher of actual vs volume weight
+   using divisor 6000 for air freight)
+- Nature of goods, HS code, declared value (USD)
+- Special handling codes (PER, VAL, DG, AVI, HUM)
+- Charges: weight charge, fuel surcharge, security
+  surcharge, miscellaneous, total
+
+House AWB (HAWB) creation:
+- Link to parent MAWB
+- HAWB number from own numbering series
+- Individual shipper/consignee per house
+- Consolidation: multiple HAWBs under one MAWB
+
+AWB print:
+- Properly formatted AWB document
+- All 3 copies (original green, duplicate pink, triplicate blue)
+- HAWB print
+- Supports direct print and PDF download
+
+DGCA Cargo Manifest (Form CA-1):
+- Auto-generate from all AWBs on a flight
+- All mandatory DGCA fields
+- Station manager signature fields
+- Print and PDF export
+- Submit to DGCA (future API integration placeholder)
+
+Shipment tracking:
+- Manual status updates (accepted, departed, arrived,
+  customs cleared, delivered, exception)
+- Timeline view per AWB
+- Status visible to customer via customer portal
+
+Sub-agency operations:
+- Assign shipments to sub-agents
+- Track sub-agent AWBs
+- Commission calculation per shipment
+- Monthly statement generation per sub-agent
+- Commission settlement with TDS deduction
+
+════════════════════════════════════════
+MODULE 7 — CHA / CUSTOMS MODULE
+════════════════════════════════════════
+
+CHA Challan:
+- Challan number (auto-sequential)
+- Linked AWB / SB / BE reference
+- CHA / port party name (from party master)
+- Charge type: port handling, custom clearance fee,
+  CHA service charges, demurrage / detention,
+  examination fee, scanning / X-ray, document charges
+- Amount, GST rate, TDS rate (194C)
+- Auto-calculation: GST amount, TDS amount, net payable
+- Due date (mandatory — cannot save without it)
+- Auto-book to ledger on save
+- Auto-create TDS entry
+- Auto-set payment reminder
+- Print challan with TDS certificate note
+
+Customs filing:
+- Shipping Bill (SB) for exports
+- Bill of Entry (BE) for imports
+- All ICEGATE mandatory fields
+- Port code from airport master (auto-fill)
+- IEC, AD code, GSTIN, HS code, declared value
+- LUT / Bond number for zero-rated exports
+- Status tracking: filed / LEO granted / OOC granted /
+  held / examined
+
+Duty calculator:
+- Input: HS code, assessable value (INR)
+- Auto-calculate: BCD, SWS (10% of BCD), IGST
+- Total duty payable
+
+════════════════════════════════════════
+MODULE 8 — ACCOUNTING MODULE
+════════════════════════════════════════
+
+INVOICING TO CUSTOMERS (EXPORTERS):
+
+Invoice types:
+- Tax Invoice (B2B with GSTIN)
+- Tax Invoice (B2C without GSTIN)
+- Export Invoice (zero-rated with LUT)
+- Reverse Charge Invoice
+
+Invoice fields:
+- Auto-sequential invoice number
+- Link to AWB reference
+- SAC code: 996713 (air transport of goods)
+- Line items: basic freight, fuel surcharge,
+  handling, documentation, customs charges, others
+- GST: IGST (inter-state) or CGST+SGST (intra-state)
+- Amount in words
+- Payment due date (mandatory)
+- Debit / credit note against invoice
+
+AIRLINE INVOICE PROCESSING (INCOMING):
+
+Upload airline invoice:
+- Support PDF and image upload
+- OCR / manual data entry of invoice fields
+- Match against AWB references
+- Validate amounts against rate card
+- Flag discrepancies for review
+- Due date mandatory (estimated if not on invoice)
+- Auto-book to ledger on confirmation
+
+Auto-booking to ledger on each airline invoice:
+- Dr: Airline charges account
+- Dr: Input GST account
+- Cr: TDS payable account (194C @ 2%)
+- Cr: Bank / payable account (net payable)
+
+Rate confirmation letter:
+- Formal letter to customer confirming agreed rates
+- Line-item charges with validity
+- Email / WhatsApp / PDF
+
+PAYMENT MANAGEMENT:
+
+Payments made (to airlines and CHA):
+- Record payment against invoice
+- Cheque / NEFT / RTGS / UPI
+- Bank reference number
+- Partial payment support
+- Auto-update outstanding balance
+
+Payments received (from customers):
+- Record receipt against customer invoice
+- Partial receipt support
+- Auto-update customer outstanding
+
+Payment reminders:
+- Auto-reminders 7 days, 3 days, 1 day before due date
+- Overdue alerts (daily until paid)
+- WhatsApp + email reminders
+- Dashboard showing overdue / due soon / upcoming
+- Entries without due date flagged prominently
+  — user MUST enter due date before saving
+
+LEDGER AND RECONCILIATION:
+
+Double-entry ledger:
+- Every transaction creates Dr and Cr entries
+- Narration auto-generated from source document
+- Source tag: Auto (system) / Manual
+- Filterable by: date, account, type, user, branch
+
+Account reconciliation:
+- Match payments received vs invoices raised to customers
+- Match payments made vs invoices received from airlines
+- Unreconciled items highlighted
+- Reconciliation report exportable
+
+Bank reconciliation:
+- Import bank statement (CSV)
+- Auto-match with ledger entries
+- Flag unmatched items
+
+TAXATION:
+
+GST:
+- GSTR-1 summary (B2B, B2C, exports)
+- GSTR-3B summary (output tax, ITC, net payable)
+- HSN / SAC wise summary
+- IGST vs CGST/SGST breakdown
+- Export data to GSTN portal format (JSON)
+- Filing status tracker
+
+TDS (Section 194C):
+- Auto-deduct TDS @ 2% on every airline payment
+  and CHA/sub-agency commission payment
+- Accumulate quarterly
+- Form 26Q data export
+- Challan 281 preparation
+- Deductee-wise TDS certificate data (Form 16A)
+- TDS deposit due date reminder (7th of next month)
+
+════════════════════════════════════════
+MODULE 9 — DOCUMENT MANAGEMENT
+════════════════════════════════════════
+
+Print and generate:
+- Master AWB (formatted, all 3 copies)
+- House AWB
+- DGCA Cargo Manifest (CA-1)
+- Rate confirmation letter
+- GST Tax Invoice
+- Debit note / Credit note
+- CHA challan
+- Sub-agency commission statement
+- Shipping bill summary
+- Bill of entry summary
+- TDS certificate (Form 16A data)
+- Monthly P&L report
+- Outstanding payment report
+
+All documents:
+- Professional letterhead with company logo
+- Download as PDF
+- Print directly
+- Email to party
+- Send via WhatsApp (PDF attachment)
+
+════════════════════════════════════════
+MODULE 10 — REPORTS AND ANALYTICS
+════════════════════════════════════════
+
+Standard reports:
+- Monthly AWB summary (count, weight, revenue)
+- Airline-wise revenue and profitability
+- Route-wise analysis (top routes by volume and revenue)
+- Customer-wise revenue (top exporters)
+- Sub-agency performance report
+- Outstanding receivables (ageing: 0-30, 31-60, 61-90, 90+)
+- Outstanding payables
+- GST summary report
+- TDS summary report
+- Profit and loss statement
+
+Custom report builder:
+- Select report type, date range, branch, group-by field
+- Export to PDF, Excel (.xlsx), CSV
+- Schedule automatic email delivery (daily / weekly / monthly)
+
+Dashboard KPIs:
+- AWBs this month vs last month (trend)
+- Revenue this month vs last month
+- Collection rate %
+- Customs clearance rate %
+- On-time departure rate %
+- Overdue payment count and amount
+- TDS compliance %
+
+════════════════════════════════════════
+MODULE 11 — NOTIFICATIONS AND REMINDERS
+════════════════════════════════════════
+
+System-generated alerts for:
+- Payment overdue (daily escalation)
+- Payment due in 7, 3, 1 day
+- AWB stock low (less than 10 remaining)
+- Customs hold on shipment
+- TDS deposit due (7th of month)
+- GST filing due (20th of month)
+- Rate card expiry (7 days before)
+- Space request not confirmed (24 hrs before departure)
+- DGCA manifest not filed (6 hrs before departure)
+
+Delivery channels:
+- In-app notification centre
+- Email (Nodemailer / SendGrid)
+- WhatsApp (Meta Cloud API)
+
+User can configure which alerts go to which channel.
+
+════════════════════════════════════════
+MODULE 12 — CUSTOMER PORTAL (separate login)
+════════════════════════════════════════
+
+Customers (exporters) get a separate login where they can:
+- Track their shipments by AWB number
+- View and download their invoices
+- View payment history and outstanding balance
+- Raise new enquiry / rate request
+- View rate quotations sent to them and accept/reject
+- Download documents (AWB copy, invoice, delivery proof)
+
+════════════════════════════════════════
+MODULE 13 — INTEGRATIONS
+════════════════════════════════════════
+
+- WhatsApp Business (Meta Cloud API): send documents,
+  status updates, payment reminders
+- Email SMTP: all outbound emails
+- ICEGATE (placeholder API): SB/BE filing status
+- GSTN portal (placeholder): return filing data export
+- Bank statement import: CSV format from any Indian bank
+- Airline cargo portals (placeholder): space booking,
+  AWB status sync
+- Tally export: voucher data in Tally XML format
+
+════════════════════════════════════════
+AUTHENTICATION AND SECURITY
+════════════════════════════════════════
+
+- JWT access token (15 min) + refresh token (7 days)
+- bcrypt password hashing
+- Role-based access control (RBAC)
+- Row-level security on all database queries
+- Rate limiting on all API endpoints
+- CORS configured for tenant domains
+- Optional OTP-based 2FA (Twilio or MSG91)
+- Audit trail for every create / update / delete action
+- Data backup daily (automated on Render / Supabase)
+
+════════════════════════════════════════
+SUBSCRIPTION TIERS (platform monetisation)
+════════════════════════════════════════
+
+Basic (₹2,999 / month per tenant):
+- 5 users, 1 branch, up to 200 AWBs/month
+- Core modules: AWB, basic accounting, invoicing
+- Email support
+
+Professional (₹7,999 / month per tenant):
+- 20 users, 3 branches, up to 1000 AWBs/month
+- All modules including CHA, customs, TDS, GST
+- WhatsApp notifications
+- Priority support
+
+Enterprise (₹19,999 / month per tenant):
+- Unlimited users, unlimited branches, unlimited AWBs
+- All modules + customer portal + custom reports
+- API access
+- Dedicated support + onboarding
+
+════════════════════════════════════════
+UI / UX REQUIREMENTS
+════════════════════════════════════════
+
+- Clean, professional, flat design — no gradients
+- Responsive: works on desktop, tablet, mobile
+- Sidebar navigation with role-based menu visibility
+- Dark mode support
+- All Indian number formatting: ₹1,00,000 (lakh system)
+- Date format: DD MMM YYYY (15 Dec 2024)
+- All amounts in INR by default, USD for declared values
+- Searchable dropdowns for airports, airlines, customers
+- All forms auto-save as draft every 30 seconds
+- Confirmation dialogs before any delete action
+- Loading skeletons for data-heavy pages
+- Empty state illustrations for new tenants
+- Onboarding checklist for new tenants
+  (complete company profile, add first airline,
+   add first customer, create first AWB)
+
+════════════════════════════════════════
+FOLDER STRUCTURE
+════════════════════════════════════════
+
+/client
+  /src
+    /components (reusable UI components)
+    /pages (one folder per module)
+    /hooks (custom React hooks)
+    /store (Zustand or Redux Toolkit)
+    /api (all API calls)
+    /utils (formatters, validators, helpers)
+    /types (TypeScript interfaces)
+
+/server
+  /src
+    /routes (one file per module)
+    /controllers
+    /services (business logic)
+    /middleware (auth, tenant, validation)
+    /prisma (schema + migrations)
+    /jobs (Bull.js background jobs)
+    /utils
+
+/shared
+  /types (shared TypeScript types)
+  /constants (shared constants)
+
+════════════════════════════════════════
+DELIVERABLES EXPECTED
+════════════════════════════════════════
+
+1. Complete working codebase — frontend + backend
+2. Prisma database schema with all migrations
+3. Seed data: 5 sample airports, 10 airlines,
+   2 sample tenants with demo data
+4. Environment variables template (.env.example)
+5. README with setup instructions for Render.com
+6. API documentation (Swagger / Postman collection)
+7. Docker Compose file (optional but preferred)
+
+════════════════════════════════════════
+DEVELOPMENT PRIORITY ORDER
+════════════════════════════════════════
+
+Build in this order:
+1. Auth + multi-tenant foundation + DB schema
+2. Super admin portal + tenant management
+3. Company setup + user management
+4. Airport / airline / master data modules
+5. Sales module (customers + enquiries + quotations)
+6. Airline rate management (all 5 rate types)
+7. Operations (AWB + HAWB + space requests)
+8. CHA / customs module
+9. Accounting (invoicing + payments + ledger)
+10. GST + TDS modules
+11. Document generation (PDF printing)
+12. Reports and analytics
+13. Notifications (email + WhatsApp)
+14. Customer portal
+15. Integrations and final polish
